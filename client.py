@@ -1,7 +1,7 @@
 from socket import socket, AF_INET, SOCK_DGRAM
 from threading import Thread
 
-class ClienteUDP:
+class Client:
   def __init__(self, address: str, port: int):
     self.address: str = address
     self.port: int = port
@@ -39,4 +39,4 @@ class ClienteUDP:
       self.answered = True
       print(data.decode())
 
-cliente_tcp = ClienteUDP('localhost', 8080)
+cliente = Client('localhost', 8080)
