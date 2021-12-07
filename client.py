@@ -6,28 +6,18 @@ class Client:
     self.address: str = address
     self.port: int = port
     self.socket: socket = socket(AF_INET, SOCK_DGRAM)
-    self.allowed: bool = False
+    self.must_wait: bool = False
     self.answered: bool = True
+    self.is_playing: bool = False
     Thread(target=self.__listen_server).start()
     self.__listen_keyboard()
   
   def __listen_keyboard(self):
     while True:
-      if not self.answered: continue
-      if not self.allowed:
-        message = input('send ? to know if you can join the game: ')
-        if message == '?':
-          self.__send_message(message)
-        else:
-          print("ops.. it seems that you write some different. Let's try again")
-          continue
-      else:
-        message = input('send ! to notify that you are ready: ')
-        if message == '!':
-          self.__send_message(message)
-        else:
-          print("ops.. it seems that you write some different. Let's try again")
-          continue
+      if self.must_wait: continue
+      message = input('send: ')
+      self.must_wait = True
+      self.__send_message(message)
 
   def __send_message(self, message: str):
     self.answered = False
@@ -36,7 +26,15 @@ class Client:
   def __listen_server(self):
     while True:
       data = self.socket.recv(2048)
-      self.answered = True
-      print(data.decode())
+      data = data.decode()
+      if data == '...':
+        print('Waiting for match to start. You will be notified when it occurs...')
+      elif data == '---':
+        print('--- MATCH STARTED ---')
+      elif data.startswith('R.'):
+        print(data)
+      else:
+        self.must_wait = False
+        print(data)
 
 cliente = Client('localhost', 8080)
