@@ -127,6 +127,7 @@ class Server:
     if self.round == 5:
       for player in self.players:
         self.__send_data('#', player)
+      self.__present_ranking()
       self.__init_data()
     else:
       self.__new_round()
@@ -158,6 +159,16 @@ class Server:
 
   def __send_data(self, data: str, client_address):
     self.server.sendto(data.encode(), client_address) 
+
+  def __present_ranking(self):
+    def extractor(item):
+      return item.get('value', 0)
+
+    ranking_list = [{"key": key, "value": self.ranking[key]} for key in self.ranking.keys()]
+    ranking_list.sort(reverse=True, key=extractor)
+    for index in range(len(ranking_list)):
+      print(f'{index + 1}) {ranking_list[index]["key"]} with {ranking_list[index]["value"]}pts')
+
 
 
 servidor_udp = Server('localhost', 8080)
