@@ -15,7 +15,7 @@ class Client:
   def __listen_keyboard(self):
     while True:
       if self.must_wait: continue
-      message = input('send: ')
+      message = input()
       self.must_wait = True
       self.__send_message(message)
 
@@ -28,13 +28,17 @@ class Client:
       data = self.socket.recv(2048)
       data = data.decode()
       if data == '...':
-        print('Waiting for match to start. You will be notified when it occurs...')
+        self.must_wait = True
+        print('Wait...')
       elif data == '---':
         print('--- MATCH STARTED ---')
       elif data.startswith('R.'):
         print(data)
-      else:
+      elif data == '#':
+        print('END GAME')
         self.must_wait = False
+      else:
         print(data)
+        self.must_wait = False
 
 cliente = Client('localhost', 8080)
