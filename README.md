@@ -1,2 +1,2 @@
-# UDP-Server
-Server implementation by using the UDP communication protocol
+# Servers Repository
+Repository for the project of the "computer networks" discipline, containing servers in TCP and UDP architecture
