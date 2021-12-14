@@ -4,19 +4,20 @@ from time import ctime
 
 
 class BrowsingFolder:
-    def create_html(self, path='/files'):
+    def create_html(self, path=''):
         file_list_names = self.__list_folder(path)
         html = self.__mount_html(path, file_list_names)
         return html
 
     @staticmethod
-    def __mount_html_item(file_path, name):
+    def __mount_html_item(file_path: str, name):
+        redirect_url = file_path.replace('files/', '')
         file_size = getsize(f'{file_path}/{name}')
         last_modify = ctime(getmtime(f'{file_path}/{name}'))
         icon = 'file.svg' if isfile(name) else 'folder.svg'
         a_html = ('<tr>'
-                  f'<td valign="top"><img src="./icons/{icon}" alt="icon" /></td>'
-                  f'<td><a href="{file_path}/{name}">{name}</a></td>'
+                  f'<td valign="top"><img src="icons/{icon}" alt="icon" /></td>'
+                  f'<td><a href="{redirect_url}{name}">{name}</a></td>'
                   f'<td align="right">{last_modify}</td>'
                   f'<td align="right">{file_size} bytes</td>'
                   '<td>&nbsp;</td>'
@@ -71,13 +72,14 @@ class BrowsingFolder:
 
     @staticmethod
     def __list_folder(path):
-        try:
+        if listdir(path):
             file_list_names = [f for f in listdir(path) if join(path, f)]
             return file_list_names
-        except:
+        else:
             return []
 
     def create_html_file(self, path):
         html = self.create_html(path)
         with open(f'{path}/index.html', 'w') as file:
             file.write(html)
+        return html
