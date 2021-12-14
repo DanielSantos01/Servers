@@ -47,7 +47,7 @@ class ProtocolHTTP:
 
         except Exception as e:
             msg = self.get_message(repr(e))
-            self.handle_response(msg, '<h1>NOT FOUND</h1>')
+            self.handle_response(msg, f'<h1>{msg}</h1>')
 
     @staticmethod
     def handle_method(method: str, all_path: str):
