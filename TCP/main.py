@@ -96,7 +96,7 @@ class ProtocolHTTP:
         else:
             mime = mimetypes.guess_type(file_path)
             mime = mime[0]
-        
+
         response = f'HTTP/1.1 {message}\nDate: {date}\nServer: SocketTCP/1.0.0\ncontent-type: {mime}\n\n'
         if isinstance(body, bytes):
             data = body
